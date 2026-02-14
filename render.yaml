@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: backstage-backend
+    env: node
+    buildCommand: yarn install && yarn tsc && yarn build:backend
+    startCommand: yarn workspace backend start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: GITHUB_TOKEN
+        sync: false
+      - key: APP_BASE_URL
+        sync: false
+      - key: BACKEND_BASE_URL
+        sync: false
+      - key: POSTGRES_HOST
+        fromDatabase:
+          name: backstage-db
+          property: host
+      - key: POSTGRES_PORT
+        fromDatabase:
+          name: backstage-db
+          property: port
+      - key: POSTGRES_USER
+        fromDatabase:
+          name: backstage-db
+          property: user
+      - key: POSTGRES_PASSWORD
+        fromDatabase:
+          name: backstage-db
+          property: password
+
+databases:
+  - name: backstage-db
+    databaseName: backstage
+    user: backstage

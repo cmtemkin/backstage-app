@@ -1,0 +1,13 @@
+{
+  "$schema": "https://railway.app/railway.schema.json",
+  "build": {
+    "builder": "NIXPACKS",
+    "buildCommand": "yarn install && yarn tsc && yarn build:backend"
+  },
+  "deploy": {
+    "startCommand": "yarn workspace backend start",
+    "healthcheckPath": "/healthcheck",
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 10
+  }
+}
