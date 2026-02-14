@@ -1,9 +1,9 @@
 app:
-  title: Scaffolded Backstage App
+  title: Charlie's Developer Portal
   baseUrl: http://localhost:3000
 
 organization:
-  name: My Company
+  name: Charlie Temkin
 
 backend:
   # Used for enabling authentication, secret is shared by all backend plugins
@@ -58,7 +58,7 @@ proxy:
 techdocs:
   builder: 'local' # Alternatives - 'external'
   generator:
-    runIn: 'docker' # Alternatives - 'local'
+    runIn: 'local' # Alternatives - 'docker'
   publisher:
     type: 'local' # Alternatives - 'googleGcs' or 'awsS3'. Read documentation for using alternatives.
 
@@ -76,8 +76,22 @@ catalog:
     entityFilename: catalog-info.yaml
     pullRequestBranchName: backstage-integration
   rules:
-    - allow: [Component, System, API, Resource, Location]
+    - allow: [Component, System, API, Resource, Location, Template]
+  providers:
+    github:
+      cmtemkin:
+        organization: 'cmtemkin'
+        catalogPath: '/catalog-info.yaml'
+        filters:
+          repository: '.*'
+        schedule:
+          frequency: { minutes: 30 }
+          timeout: { minutes: 3 }
   locations:
+    # Charlie's catalog - central catalog definitions
+    - type: url
+      target: https://github.com/cmtemkin/backstage-catalog/blob/main/all-components.yaml
+
     # Local example data, file locations are relative to the backend process, typically `packages/backend`
     - type: file
       target: ../../examples/entities.yaml
@@ -93,16 +107,6 @@ catalog:
       target: ../../examples/org.yaml
       rules:
         - allow: [User, Group]
-
-    ## Uncomment these lines to add more example data
-    # - type: url
-    #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all.yaml
-
-    ## Uncomment these lines to add an example org
-    # - type: url
-    #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/acme-corp.yaml
-    #   rules:
-    #     - allow: [User, Group]
 
 kubernetes:
   # see https://backstage.io/docs/features/kubernetes/configuration for kubernetes configuration options
